@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+    <title>个人设计作品集 | Product Design Portfolio</title>
+    
+    <!-- 图片防盗保护CSS -->
+    <style>
+        /* 图片基础保护 */
+        img {
+            pointer-events: none !important;
+            user-select: none !important;
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            -webkit-user-drag: none !important;
+            -moz-user-drag: none !important;
+            -ms-user-drag: none !important;
+            user-drag: none !important;
+        }
+        
+        /* 图片容器保护 */
+        .gallery-item, .detail-image, .thumbnail-item {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gallery-item::after, 
+        .detail-image::after, 
+        .thumbnail-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.001);
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        /* 防止文本选择 */
+        .gallery-item, .detail-header, .thumbnail-info {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        /* === 图片防盗增强保护 === */
+        .image-protection-overlay {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(255, 255, 255, 0.001) !important;
+            z-index: 1000 !important;
+            pointer-events: none !important;
+        }
+
+        /* 防止图片被选择 */
+        img, .gallery-item, .thumbnail-item, .detail-image {
+            -webkit-touch-callout: none !important;
+            -webkit-user-callout: none !important;
+        }
+
+        /* 防止长按保存 */
+        img {
+            -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+        }
+
+        /* 移动端特别保护 */
+        @media (max-width: 768px) {
+            img {
+                -webkit-touch-callout: none !important;
+                -webkit-user-select: none !important;
+                -moz-user-select: none !important;
+                -ms-user-select: none !important;
+                user-select: none !important;
+            }
+            
+            /* 防止长按弹出菜单 */
+            * {
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+            }
+        }
+
+        /* 保护动画 */
+        @keyframes antiTheftPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.5; }
+        }
+        
+        .protection-active {
+            animation: antiTheftPulse 2s infinite;
+        }
+        
+        /* === 核心样式 === */
+        :root {
+            --primary-color: #333;
+            --accent-color: #007AFF;
+            --bg-color: #f4f4f4;
+            --card-bg: #fff;
+            --transition: all 0.3s ease;
+            --safe-area-top: env(safe-area-inset-top, 20px);
+            
+            /* === 标题字体大小变量 - 独立控制 === */
+            --title-h2-size-desktop: 4rem;  /* 电脑端主标题大小 */
+            --title-h1-size-desktop: 2.5rem;  /* 电脑端英文标题大小 */
+            --title-h2-size-mobile: 2.2rem;   /* 移动端主标题大小 */
+            --title-h1-size-mobile: 1.5rem;   /* 移动端英文标题大小 */
+            --title-h2-weight: 700;           /* 主标题字体粗细 */
+            --title-h1-weight: 300;           /* 英文标题字体粗细 */
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent !important;
+            tap-highlight-color: transparent !important;
+        }
+
+        /* 防止双击缩放 */
+        html, body {
+            touch-action: manipulation;
+            -ms-touch-action: manipulation;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            padding-top: env(safe-area-inset-top, 0);
+            max-width: 100vw;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 防止按钮双击缩放 */
+        button, 
+        .filter-btn, 
+        .card-btn, 
+        .back-home,
+        .close-btn {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent !important;
+            tap-highlight-color: transparent !important;
+            outline: none !important;
+        }
+
+        /* 防止链接双击缩放 */
+        a {
+            -webkit-tap-highlight-color: transparent !important;
+            tap-highlight-color: transparent !important;
+        }
+
+        header {
+            text-align: center;
+            padding: calc(50px + var(--safe-area-top)) 40px 40px;
+            background: var(--card-bg);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        /* 电脑端标题样式 - 使用独立变量 */
+        header h2 {
+            font-size: var(--title-h2-size-desktop);
+            font-weight: var(--title-h2-weight);
+            letter-spacing: 1px;
+            margin-bottom: 0px;
+            text-transform: uppercase;
+            margin-top: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        h1 {
+            font-size: var(--title-h1-size-desktop);
+            margin-bottom: 0px;
+            letter-spacing: 2px;
+            font-weight: var(--title-h1-weight);
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            margin-top: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            text-transform: uppercase;
+        }
+
+        p.subtitle { 
+            color: #666; 
+            font-size: 1.1rem; 
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0;
+        }
+
+        .card-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(0,122,255,0.2);
+            margin-top: 15px;
+        }
+
+        .card-btn:hover {
+            background-color: #0056CC;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0,122,255,0.3);
+        }
+
+        .card-btn i {
+            font-size: 1rem;
+        }
+
+        .card-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .card-modal.show {
+            display: flex;
+        }
+
+        .card-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            position: relative;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #999;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+        }
+
+        .card-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .card-title {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .card-info {
+            margin-bottom: 25px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .info-icon {
+            width: 24px;
+            height: 24px;
+            background-color: #f0f7ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .info-text {
+            font-size: 0.95rem;
+        }
+
+        .qr-code {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+
+        .qr-title {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .qr-img {
+            width: 150px;
+            height: 150px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 0.8rem;
+        }
+
+        .software-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .software-tag {
+            background-color: #f0f7ff;
+            color: var(--accent-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .filter-nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+            padding: 0 20px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .filter-btn {
+            border: none;
+            background: transparent;
+            padding: 10px 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #888;
+            border-radius: 30px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--accent-color);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,122,255,0.3);
+        }
+
+        .amazon-btn-container {
+            position: relative;
+        }
+
+        .bubble {
+            position: absolute;
+            top: -15px;
+            right: -10px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            font-weight: bold;
+            white-space: nowrap;
+            z-index: 10;
+            box-shadow: 0 3px 6px rgba(0, 122, 255, 0.3);
+            animation: pulse 2s infinite;
+            display: block !important;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            right: 15px;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid var(--accent-color);
+        }
+
+        .bubble.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 3px 6px rgba(0, 122, 255, 0.3); }
+            50% { box-shadow: 0 3px 10px rgba(0, 122, 255, 0.5); }
+            100% { box-shadow: 0 3px 6px rgba(0, 122, 255, 0.3); }
+        }
+
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 80px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 20px;
+        }
+
+        .gallery-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: fit-content;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            display: block;
+            height: auto;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .item-info {
+            padding: 15px;
+        }
+
+        .item-title { font-weight: bold; font-size: 1.1rem; }
+        .item-tag { 
+            font-size: 0.8rem; 
+            color: #666;
+            text-transform: uppercase; 
+            margin-top: 5px; 
+            display: inline-block;
+        }
+
+        .gallery-item.wide-item {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 1024px) {
+            .gallery-item.wide-item { grid-column: span 2; }
+        }
+        
+        /* === 移动端响应式设计 === */
+        @media (max-width: 768px) {
+            /* 移动端额外防止双击缩放 */
+            html {
+                touch-action: manipulation;
+                -ms-touch-action: manipulation;
+                -webkit-text-size-adjust: 100%;
+                text-size-adjust: 100%;
+            }
+            
+            body {
+                touch-action: manipulation;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                user-select: none;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            
+            /* 移动端标题样式 - 使用独立变量控制 */
+            h1 {
+                font-size: var(--title-h1-size-mobile) !important;
+                font-weight: var(--title-h1-weight) !important;
+                line-height: 1.1;
+                margin-top: 0;
+                letter-spacing: 3px;
+                margin-bottom: 15px;
+                -webkit-text-stroke: 0.2px transparent;
+            }
+            
+            header h2 {
+                font-size: var(--title-h2-size-mobile) !important;
+                font-weight: var(--title-h2-weight) !important;
+                margin-bottom: 12px;
+                letter-spacing: 2px;
+                margin-top: 0;
+                -webkit-text-stroke: 0.2px transparent;
+            }
+            
+            .gallery-item.wide-item { grid-column: span 2; }
+            
+            .gallery-container {
+                grid-template-columns: repeat(2, 1fr);
+                grid-auto-flow: dense;
+            }
+            
+            header {
+                padding: calc(35px + var(--safe-area-top)) 20px 30px;
+            }
+            
+            p.subtitle {
+                font-size: 1rem;
+                max-width: 90%;
+                margin-bottom: 20px;
+                margin-top: 0;
+            }
+            
+            .filter-nav {
+                margin: 30px 0;
+                position: relative;
+                padding-top: 10px;
+            }
+            
+            .amazon-btn-container {
+                position: relative;
+                margin-bottom: 15px;
+            }
+            
+            .bubble {
+                position: absolute;
+                top: -25px;
+                right: 50%;
+                transform: translateX(50%);
+                white-space: nowrap;
+                z-index: 10;
+                background-color: var(--accent-color);
+                color: white;
+                padding: 4px 12px;
+                border-radius: 12px;
+                font-size: 0.7rem;
+                box-shadow: 0 3px 8px rgba(0, 122, 255, 0.3);
+                animation: pulse 2s infinite;
+                display: block !important;
+            }
+            
+            .bubble::after {
+                content: '';
+                position: absolute;
+                bottom: -6px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 0;
+                height: 0;
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+                border-top: 6px solid var(--accent-color);
+            }
+            
+            .gallery-item {
+                height: auto;
+                min-height: 250px;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .gallery-item img {
+                flex-grow: 1;
+                object-fit: cover;
+                min-height: 180px;
+            }
+            
+            /* 移动端按钮防双击缩放 */
+            .filter-btn, .card-btn, .close-btn {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent !important;
+                tap-highlight-color: transparent !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .gallery-container {
+                grid-template-columns: repeat(2, 1fr);
+                grid-gap: 15px;
+                grid-auto-flow: dense;
+            }
+            
+            header {
+                padding: calc(30px + var(--safe-area-top)) 15px 25px;
+            }
+            
+            h1 {
+                font-size: calc(var(--title-h1-size-mobile) * 0.85) !important;
+                font-weight: var(--title-h1-weight) !important;
+                letter-spacing: 1px;
+                line-height: 1.2;
+                margin-top: 0;
+                margin-bottom: 12px;
+                -webkit-text-stroke: 0.2px transparent;
+            }
+            
+            header h2 {
+                font-size: calc(var(--title-h2-size-mobile) * 0.85) !important;
+                font-weight: var(--title-h2-weight) !important;
+                letter-spacing: 1px;
+                line-height: 1.2;
+                margin-top: 0;
+                margin-bottom: 10px;
+                -webkit-text-stroke: 0.2px transparent;
+            }
+            
+            p.subtitle {
+                font-size: 0.95rem;
+                max-width: 95%;
+                margin-bottom: 18px;
+                margin-top: 0;
+            }
+            
+            .filter-nav {
+                margin: 25px 0;
+            }
+            
+            .gallery-item {
+                min-height: 220px;
+            }
+            
+            .gallery-item img {
+                min-height: 150px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .gallery-container {
+                grid-template-columns: repeat(2, 1fr);
+                grid-gap: 10px;
+                padding: 0 10px 40px;
+                grid-auto-flow: dense;
+            }
+            
+            header {
+                padding: calc(25px + var(--safe-area-top)) 12px 20px;
+            }
+            
+            h1 {
+                font-size: calc(var(--title-h1-size-mobile) * 0.75) !important;
+                font-weight: var(--title-h1-weight) !important;
+                letter-spacing: 1px;
+                line-height: 1.2;
+                margin-top: 0;
+                margin-bottom: 12px;
+                -webkit-text-stroke: 0.2px transparent;
+            }
+            
+            header h2 {
+                font-size: calc(var(--title-h2-size-mobile) * 0.75) !important;
+                font-weight: var(--title-h2-weight) !important;
+                letter-spacing: 1px;
+                line-height: 1.2;
+                margin-top: 0;
+                margin-bottom: 10px;
+                -webkit-text-stroke: 0.2px transparent;
+            }
+            
+            .item-info {
+                padding: 10px;
+            }
+            
+            .item-title {
+                font-size: 1rem;
+            }
+            
+            .gallery-item {
+                min-height: 200px;
+            }
+            
+            .gallery-item img {
+                min-height: 130px;
+            }
+        }
+        
+        .hide { display: none; }
+        .show { display: block; animation: fadeIn 0.5s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    
+    <!-- 添加Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <h2>个人作品</h2>
+        <h1>DESIGN PORTFOLIO</h1>
+        <p class="subtitle">专注视觉呈现：亚马逊主图A+ / 产品精修 / 产品渲染 / 产品摄影 / 详情页 / 品牌logo / 明信片设计......</p>
+        <button class="card-btn" id="cardBtn">
+            <i class="fas fa-id-card"></i> 个人名片
+        </button>
+    </header>
+
+    <!-- 名片弹窗 -->
+    <div class="card-modal" id="cardModal">
+        <div class="card-content">
+            <button class="close-btn" id="closeBtn">&times;</button>
+            
+            <div class="card-header">
+                <img src="images/logo_cover.jpg" alt="个人头像" class="card-avatar">
+                <div>
+                    <div class="card-name">Mr.Lee</div>
+                    <div class="card-title">资深产品视觉设计师</div>
+                </div>
+            </div>
+            
+            <div class="card-info">
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="info-text">
+                        <strong>电话:</strong> 暂无
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fab fa-weixin"></i>
+                    </div>
+                    <div class="info-text">
+                        <strong>微信:</strong> lsy1974187983
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-laptop"></i>
+                    </div>
+                    <div class="info-text">
+                        <strong>擅长软件:</strong>
+                        <div class="software-list">
+                            <span class="software-tag">Photoshop</span>
+                            <span class="software-tag">Illustrator</span>
+                            <span class="software-tag">Cinema 4D </span>
+                            <span class="software-tag">RedShift</span>
+                            <span class="software-tag">After Effects</span>
+                            <span class="software-tag">AIGG</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="qr-code">
+                <div class="qr-title">微信好友二维码</div>
+                <div class="qr-img">
+                    <img src="images/微信二维码_cover.jpg" alt="微信好友二维码" width="100%">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="filter-nav">
+        <button class="filter-btn active" data-filter="all">全部作品</button>
+        <div class="amazon-btn-container">
+            <div class="bubble">优势</div>
+            <button class="filter-btn" data-filter="amazon" id="amazonBtn">亚马逊主图A+</button>
+        </div>
+        <button class="filter-btn" data-filter="render">产品渲染</button>
+        <button class="filter-btn" data-filter="refine">产品精修</button>
+        <button class="filter-btn" data-filter="photography">产品摄影</button>
+        <button class="filter-btn" data-filter="details">详情页</button>
+    </nav>
+
+    <div class="gallery-container" id="gallery-container">
+        <!-- 作品项将通过JavaScript动态生成 -->
+    </div>
+
+    <!-- 图片防盗保护脚本 -->
+    <script src="image-protection.js"></script>
+    
+    <!-- 功能脚本 -->
+    <script>
+        // --- 名片弹窗功能 ---
+        const cardBtn = document.getElementById('cardBtn');
+        const cardModal = document.getElementById('cardModal');
+        const closeBtn = document.getElementById('closeBtn');
+        
+        cardBtn.addEventListener('click', function() {
+            cardModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        closeBtn.addEventListener('click', function() {
+            cardModal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        });
+        
+        cardModal.addEventListener('click', function(e) {
+            if (e.target === cardModal) {
+                cardModal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && cardModal.classList.contains('show')) {
+                cardModal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // 作品数据
+        const worksData = [
+            {
+                id: 1,
+                title: "亚马逊-挂脖风扇",
+                tag: "Neck Fan",
+                category: "amazon",
+                coverImage: "images/挂脖风扇_cover.jpg",
+                detailImage: "images/挂脖风扇_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 2,
+                title: "汽车渲染案例",
+                tag: "Car Rendering",
+                category: "render",
+                coverImage: "images/汽车渲染_cover.png",
+                detailImage: "images/汽车渲染_detail.jpg",
+                isWide: true
+            },
+            {
+                id: 3,
+                title: "产品精修",
+                tag: "Product Retouching",
+                category: "refine",
+                coverImage: "images/智能手表_cover.png",
+                detailImage: "images/产品精修_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 4,
+                title: "产品摄影",
+                tag: "Product Photography",
+                category: "photography",
+                coverImage: "images/产品拍摄_cover.png",
+                detailImage: "images/产品摄影_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 5,
+                title: "筋膜枪详情页1",
+                tag: "Massage Gun 1",
+                category: "details",
+                coverImage: "images/筋膜枪详情页1_cover.png",
+                detailImage: "images/筋膜枪详情1_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 6,
+                title: "产品渲染案例1",
+                tag: "Product Rendering 1",
+                category: "render",
+                coverImage: "images/挂腰风扇渲染_cover.png",
+                detailImage: "images/挂腰风扇渲染_detail.jpg",
+                isWide: true
+            },
+            {
+                id: 7,
+                title: "亚马逊-抽油泵",
+                tag: "Oil Pump",
+                category: "amazon",
+                coverImage: "images/抽油泵_cover.jpg",
+                detailImage: "images/抽油泵_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 8,
+                title: "亚马逊-挂腰风扇",
+                tag: "Waist Fan",
+                category: "amazon",
+                coverImage: "images/挂腰风扇_cover.jpg",
+                detailImage: "images/挂腰风扇_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 9,
+                title: "亚马逊-挂腰风扇2",
+                tag: "Waist Fan 2",
+                category: "amazon",
+                coverImage: "images/挂腰风扇2_cover.jpg",
+                detailImage: "images/挂腰风扇2_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 10,
+                title: "亚马逊-夹子风扇",
+                tag: "Clip Fan",
+                category: "amazon",
+                coverImage: "images/夹子风扇_cover.jpg",
+                detailImage: "images/夹子风扇_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 11,
+                title: "亚马逊-工业喷雾风扇",
+                tag: "Spray Fan",
+                category: "amazon",
+                coverImage: "images/工业喷雾风扇_cover.jpg",
+                detailImage: "images/工业喷雾风扇_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 12,
+                title: "亚马逊-男士剃毛器",
+                tag: "Men's Shaver",
+                category: "amazon",
+                coverImage: "images/男士剃毛器_cover.jpg",
+                detailImage: "images/男士剃毛器_detail.jpg",
+                isWide: true
+            },
+            {
+                id: 13,
+                title: "亚马逊-女士剃毛器",
+                tag: "Women's Shaver",
+                category: "amazon",
+                coverImage: "images/女士剃毛器_cover.jpg",
+                detailImage: "images/女士剃毛器_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 14,
+                title: "亚马逊-烟熏器",
+                tag: "Smoker",
+                category: "amazon",
+                coverImage: "images/烟熏器_cover.jpg",
+                detailImage: "images/烟熏器_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 15,
+                title: "亚马逊-金属男款表带",
+                tag: "Metal Watch Strap",
+                category: "amazon",
+                coverImage: "images/金属男款表带_cover.jpg",
+                detailImage: "images/金属男款表带_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 16,
+                title: "亚马逊-户外表带",
+                tag: "Outdoor Watch Strap",
+                category: "amazon",
+                coverImage: "images/户外表带_cover.jpg",
+                detailImage: "images/户外表带_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 17,
+                title: "亚马逊-金属女款表带",
+                tag: "Metal Watch Strap",
+                category: "amazon",
+                coverImage: "images/金属女款表带_cover.jpg",
+                detailImage: "images/金属女款表带_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 18,
+                title: "亚马逊-八爪风扇主图",
+                tag: "Octopus Fan",
+                category: "amazon",
+                coverImage: "images/八爪风扇_cover.jpg",
+                detailImage: "images/八爪喷雾风扇_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 19,
+                title: "亚马逊-南瓜刀、打印机主图",
+                tag: "Pumpkin Knife & Printer",
+                category: "amazon",
+                coverImage: "images/南瓜刀_cover.jpg",
+                detailImage: "images/三寸打印机_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 20,
+                title: "亚马逊-扫码枪、缝纫机A+",
+                tag: "Scanner & Sewing Machine",
+                category: "amazon",
+                coverImage: "images/扫码枪_cover.jpg",
+                detailImage: "images/扫码枪_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 21,
+                title: "亚马逊-男士钱包",
+                tag: "Men's Wallet",
+                category: "amazon",
+                coverImage: "images/男士钱包_cover.jpg",
+                detailImage: "images/男士钱包_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 22,
+                title: "亚马逊-电蚊拍",
+                tag: "Mosquito Swatter",
+                category: "amazon",
+                coverImage: "images/电蚊拍_cover.jpg",
+                detailImage: "images/电蚊拍_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 23,
+                title: "亚马逊-咖啡加热垫",
+                tag: "Coffee Heating Pad",
+                category: "amazon",
+                coverImage: "images/咖啡加热垫_cover.jpg",
+                detailImage: "images/咖啡加热垫_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 24,
+                title: "产品渲染案例2",
+                tag: "Product Rendering 2",
+                category: "render",
+                coverImage: "images/八爪风扇渲染_cover.jpg",
+                detailImage: "images/八爪风扇渲染_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 25,
+                title: "产品渲染案例3",
+                tag: "Product Rendering 3",
+                category: "render",
+                coverImage: "images/抽油泵渲染_cover.jpg",
+                detailImage: "images/抽油泵渲染_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 26,
+                title: "产品渲染案例4",
+                tag: "Product Rendering 4",
+                category: "render",
+                coverImage: "images/剃毛器渲染_cover.jpg",
+                detailImage: "images/剃毛器渲染_detail.jpg",
+                isWide: true
+            },
+            {
+                id: 27,
+                title: "产品渲染案例5",
+                tag: "Product Rendering 5",
+                category: "render",
+                coverImage: "images/其他产品渲染_cover.jpg",
+                detailImage: "images/其他产品渲染_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 28,
+                title: "筋膜枪详情页2",
+                tag: "Massage Gun 2",
+                category: "details",
+                coverImage: "images/筋膜枪详情2_cover.jpg",
+                detailImage: "images/筋膜枪详情2_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 29,
+                title: "筋膜枪详情页3",
+                tag: "Massage Gun 3",
+                category: "details",
+                coverImage: "images/筋膜枪详情3_cover.jpg",
+                detailImage: "images/筋膜枪详情3_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 30,
+                title: "冲牙器详情页",
+                tag: "Oral Irrigator",
+                category: "details",
+                coverImage: "images/冲牙器_cover.jpg",
+                detailImage: "images/冲牙器详情_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 31,
+                title: "桑拿房详情页",
+                tag: "Sauna Room",
+                category: "details",
+                coverImage: "images/桑拿房_cover.jpg",
+                detailImage: "images/桑拿房详情_detail.jpg",
+                isWide: false
+            },
+            {
+                id: 32,
+                title: "打底裤详情页",
+                tag: "Leggings",
+                category: "details",
+                coverImage: "images/打底裤详情_cover.jpg",
+                detailImage: "images/打底裤_detail.jpg",
+                isWide: false
+            }
+        ];
+
+        function generateGalleryItems() {
+            const galleryContainer = document.getElementById('gallery-container');
+            
+            galleryContainer.innerHTML = worksData.map(work => `
+                <a href="detail.html?id=${work.id}" class="gallery-item ${work.category}" data-id="${work.id}">
+                    <img src="${work.coverImage}" alt="${work.title}" data-id="${work.id}" 
+                         oncontextmenu="return false;" 
+                         ondragstart="return false;"
+                         loading="lazy">
+                    <div class="item-info">
+                        <div class="item-title">${work.title}</div>
+                        <span class="item-tag">${work.tag}</span>
+                    </div>
+                </a>
+            `).join('');
+            
+            galleryContainer.querySelectorAll('img').forEach(img => {
+                img.addEventListener('load', function() {
+                    checkAndApplyWideLayout(this);
+                });
+                
+                if (img.complete) {
+                    checkAndApplyWideLayout(img);
+                }
+                
+                img.addEventListener('error', function() {
+                    console.log('封面图片加载失败:', this.src);
+                    this.style.backgroundColor = '#eee';
+                    this.style.minHeight = '200px';
+                    const workId = this.getAttribute('data-id');
+                    const work = worksData.find(w => w.id === parseInt(workId));
+                    if (work && work.detailImage) {
+                        this.src = work.detailImage;
+                    }
+                });
+            });
+            
+            worksData.forEach(work => {
+                if (work.isWide) {
+                    const item = galleryContainer.querySelector(`[data-id="${work.id}"]`);
+                    if (item) {
+                        item.classList.add('wide-item');
+                    }
+                }
+            });
+        }
+        
+        function checkAndApplyWideLayout(imgElement) {
+            const naturalWidth = imgElement.naturalWidth;
+            const naturalHeight = imgElement.naturalHeight;
+            const workId = imgElement.getAttribute('data-id');
+            const work = worksData.find(w => w.id === parseInt(workId));
+            
+            if (work && naturalWidth > naturalHeight) {
+                const galleryItem = imgElement.closest('.gallery-item');
+                if (galleryItem) {
+                    galleryItem.classList.add('wide-item');
+                }
+            }
+        }
+
+        function filterSelection(category) {
+            const items = document.querySelectorAll('.gallery-item');
+            const btns = document.querySelectorAll('.filter-btn');
+            const bubble = document.querySelector('.bubble');
+
+            btns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.filter === category || (category === 'all' && btn.dataset.filter === 'all')) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // 移动端和PC端统一处理气泡显示
+            if (category === 'amazon') {
+                bubble.classList.add('hidden');
+            } else {
+                bubble.classList.remove('hidden');
+            }
+
+            items.forEach(item => {
+                if (category === 'all' || item.classList.contains(category)) {
+                    item.style.display = 'block';
+                    setTimeout(() => {
+                        item.classList.add('show');
+                    }, 10);
+                } else {
+                    item.style.display = 'none';
+                    item.classList.remove('show');
+                }
+            });
+            
+            setTimeout(() => {
+                const galleryContainer = document.getElementById('gallery-container');
+                galleryContainer.style.display = 'none';
+                void galleryContainer.offsetHeight;
+                galleryContainer.style.display = 'grid';
+            }, 50);
+        }
+
+        function setupBubbleInteraction() {
+            const amazonBtn = document.getElementById('amazonBtn');
+            const bubble = document.querySelector('.bubble');
+            const allFilterBtns = document.querySelectorAll('.filter-btn');
+            
+            if (!amazonBtn || !bubble) return;
+            
+            // 移动端也显示气泡，但简化交互
+            if (window.innerWidth <= 768) {
+                bubble.classList.remove('hidden');
+                bubble.style.display = 'block';
+                
+                // 移动端点击亚马逊按钮时隐藏气泡
+                amazonBtn.addEventListener('click', function() {
+                    bubble.classList.add('hidden');
+                });
+                
+                // 点击其他按钮时显示气泡
+                allFilterBtns.forEach(btn => {
+                    if (btn.dataset.filter !== 'amazon') {
+                        btn.addEventListener('click', function() {
+                            bubble.classList.remove('hidden');
+                        });
+                    }
+                });
+                
+                return;
+            }
+            
+            // PC端原有交互逻辑保持不变
+            bubble.classList.remove('hidden');
+            
+            amazonBtn.addEventListener('mouseenter', function() {
+                bubble.classList.add('hidden');
+            });
+            
+            amazonBtn.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('active')) {
+                    bubble.classList.remove('hidden');
+                }
+            });
+            
+            allFilterBtns.forEach(btn => {
+                if (btn.dataset.filter !== 'amazon') {
+                    btn.addEventListener('mouseenter', function() {
+                        if (!amazonBtn.classList.contains('active')) {
+                            bubble.classList.remove('hidden');
+                        }
+                    });
+                }
+            });
+            
+            bubble.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            const filterNav = document.querySelector('.filter-nav');
+            filterNav.addEventListener('mouseleave', function() {
+                if (!amazonBtn.classList.contains('active')) {
+                    bubble.classList.remove('hidden');
+                }
+            });
+        }
+        
+        // 防止双击缩放的功能
+        function preventDoubleTapZoom() {
+            if (window.innerWidth <= 768) {
+                // 移除所有按钮的双击事件默认行为
+                document.querySelectorAll('button, .filter-btn, .card-btn, a').forEach(element => {
+                    let lastTouchTime = 0;
+                    element.addEventListener('touchend', function(e) {
+                        const currentTime = new Date().getTime();
+                        const timeDiff = currentTime - lastTouchTime;
+                        
+                        if (timeDiff < 300 && timeDiff > 0) {
+                            // 检测到双击，阻止默认行为
+                            e.preventDefault();
+                            e.stopPropagation();
+                            
+                            // 如果是过滤器按钮，触发点击事件
+                            if (this.classList.contains('filter-btn')) {
+                                const filter = this.dataset.filter;
+                                filterSelection(filter);
+                            } else if (this.id === 'cardBtn') {
+                                cardModal.classList.add('show');
+                                document.body.style.overflow = 'hidden';
+                            }
+                        }
+                        
+                        lastTouchTime = currentTime;
+                    }, { passive: false });
+                });
+                
+                // 防止整个页面的双击缩放
+                document.addEventListener('dblclick', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }, { passive: false });
+                
+                // 防止手势缩放
+                document.addEventListener('gesturestart', function(e) {
+                    e.preventDefault();
+                }, { passive: false });
+                
+                document.addEventListener('gesturechange', function(e) {
+                    e.preventDefault();
+                }, { passive: false });
+                
+                document.addEventListener('gestureend', function(e) {
+                    e.preventDefault();
+                }, { passive: false });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            generateGalleryItems();
+            
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const filter = this.dataset.filter;
+                    filterSelection(filter);
+                });
+            });
+
+            setupBubbleInteraction();
+            preventDoubleTapZoom();
+            filterSelection('all');
+            
+            window.addEventListener('resize', function() {
+                setupBubbleInteraction();
+                
+                const activeBtn = document.querySelector('.filter-btn.active');
+                const bubble = document.querySelector('.bubble');
+                if (activeBtn && activeBtn.dataset.filter === 'amazon') {
+                    bubble.classList.add('hidden');
+                } else {
+                    bubble.classList.remove('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
