@@ -1,5 +1,0 @@
-cat > .gitignore << 'EOF'
-.DS_Store
-node_modules/
-*.log
-EOF
