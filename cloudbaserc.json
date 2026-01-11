@@ -1,0 +1,17 @@
+cat > cloudbaserc.json << 'EOF'
+{
+  "envId": "lee999-7ge88qjta255d342",
+  "framework": {
+    "name": "static",
+    "plugins": {
+      "client": {
+        "use": "@cloudbase/framework-plugin-website",
+        "inputs": {
+          "buildCommand": "",
+          "outputPath": "."
+        }
+      }
+    }
+  }
+}
+EOF
